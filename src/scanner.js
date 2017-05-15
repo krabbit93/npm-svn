@@ -17,6 +17,7 @@ var cacheFile = __dirname + "/../.cache";
 var rootDir = __dirname + "/../../..";
 var pkg = require(rootDir + "/package.json");
 var pkgDeps = pkg.svnDependencies || {};
+var svnOptions = pkg.svnOptions || {};
 var deps = {};
 var dep = "";
 var errors = [];
@@ -154,9 +155,9 @@ function checkout(dep) {
     return function (callback) {
         console.log(colors.green("Checking"), colors.yellow(dep.name), "rev=" + dep.rev, "from", dep.COPath);
         if (dep.latest) callback(null);
-        else svn.checkout(dep.COPath, rootDir + "/" + dep.installDir, {
-            revision: dep.rev
-        }, function (error, result) {
+        else svn.checkout(dep.COPath, rootDir + "/" + dep.installDir,
+            Object.assign({revision: dep.rev}, svnOptions),
+            function (error, result) {
             return callback(error ? result : null)
         })
     }
@@ -164,9 +165,9 @@ function checkout(dep) {
 
 function update(dep) {
     return function (callback) {
-        return svn.update(rootDir + "/" + dep.installDir, {
-            revision: dep.rev
-        }, function (error, result) {
+        return svn.update(rootDir + "/" + dep.installDir,
+            Object.assign({revision: dep.rev}, svnOptions),
+            function (error, result) {
             //console.log("UP", result);
             return callback(error ? result : null)
         })
@@ -175,7 +176,7 @@ function update(dep) {
 
 function cleanup(dep) {
     return function (callback) {
-        return svn.cleanup(rootDir + "/" + dep.installDir, {}, function (error, result) {
+        return svn.cleanup(rootDir + "/" + dep.installDir, svnOptions, function (error, result) {
             //console.log("Cleanup", result);
             return callback(error ? result : null)
         })
