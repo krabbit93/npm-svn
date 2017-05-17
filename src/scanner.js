@@ -195,7 +195,7 @@ function npmInstall(dep) {
             }
         }
 
-        cp.exec("npm install", {
+        cp.exec("npm install --production", {
             stdio: "inherit",
             cwd: rootDir + "/" + dep.installDir,
             env: env
