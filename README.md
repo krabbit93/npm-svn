@@ -26,7 +26,7 @@ Make sure that you have ***svn command line tools***
 
 Install with `npm install --save npm-svn`
 
-```javascript
+```json
 "dependencies": {
   "npm-svn": "latest"
 }
@@ -35,11 +35,11 @@ Install with `npm install --save npm-svn`
 After installing npm-svn you may use list dependencies from subversion
 repositories in your `package.json` under a "svnDependencies" key. e.g.
 
-```javascript
+```json
 "svnDependencies": {
-	"svn-module": "svn://path/to/svn/repo",
-	"svn-module@tag": "svn://path/to/svn/repo",
-	"svn-module@tag|revision": "svn://path/to/svn/repo",
+  "svn-module": "svn://path/to/svn/repo",
+  "svn-module@tag": "svn://path/to/svn/repo",
+  "svn-module@tag|revision": "svn://path/to/svn/repo",
 }
 ```
 
@@ -49,14 +49,16 @@ should happend automatically when you `npm uninstall npm-svn` and only be
 necessary if you manually uninstall the module by deleting the files and removing
 entries from your package.json.
 
-##Authentication
+## Authentication
 Use in package.json for adding custom options into svn cmd
 
+```json
 "svnOptions": {
-        "username": "user",
-        "password": "password",
-        "no-auth-cache": true
-    }
+  "username": "user",
+  "password": "password",
+  "no-auth-cache": true
+}
+```
 
 ## TODO
 - refactoring
