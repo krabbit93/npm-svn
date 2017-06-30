@@ -49,6 +49,15 @@ should happend automatically when you `npm uninstall npm-svn` and only be
 necessary if you manually uninstall the module by deleting the files and removing
 entries from your package.json.
 
+##Authentication
+Use in package.json for adding custom options into svn cmd
+
+"svnOptions": {
+        "username": "user",
+        "password": "password",
+        "no-auth-cache": true
+    }
+
 ## TODO
 - refactoring
 - svn tags path config
