@@ -45,7 +45,7 @@ repositories in your `package.json` under a "svnDependencies" key. e.g.
 
 ## Documentation
 When uninstalling this module make sure the install hook has been removed. This
-should happend automatically when you `npm uninstall npm-svn` and only be
+should happen automatically when you `npm uninstall npm-svn` and only be
 necessary if you manually uninstall the module by deleting the files and removing
 entries from your package.json.
 
@@ -67,6 +67,6 @@ Use in package.json for adding custom options into svn cmd
 - console tools
 
 ## License
-Copyright (c) 2015 Eugene A. Molchanov
+Copyright (c) 2015-2017 Eugene A. Molchanov
 
 Licensed under the ISC license.
