@@ -71,6 +71,7 @@ function buildDepObj(str, deps) {
     }
     out.COPath = out.repo + "/" + out.tag;
     out.installDir = nodeModulesDir + "/" + out.name + "/";
+    out.installDirExists = fs.existsSync(rootDir + '/' + out.installDir);
     return out;
 }
 
@@ -153,30 +154,35 @@ function mkdirs(dep) {
 
 function checkout(dep) {
     return function (callback) {
-        console.log(colors.green("Checking"), colors.yellow(dep.name), "rev=" + dep.rev, "from", dep.COPath);
-        if (dep.latest) callback(null);
-        else svn.checkout(dep.COPath, rootDir + "/" + dep.installDir,
-            Object.assign({revision: dep.rev}, svnOptions),
-            function (error, result) {
-            return callback(error ? result : null)
-        })
+        if (dep.latest && dep.installDirExists) callback(null);
+        else {
+            console.log(colors.green("Checking"), colors.yellow(dep.name), "rev=" + dep.rev, "from", dep.COPath);
+            svn.checkout(dep.COPath, rootDir + "/" + dep.installDir,
+                Object.assign({revision: dep.rev}, svnOptions),
+                function (error, result) {
+                return callback(error ? result : null)
+            })
+        }
     }
 }
 
 function update(dep) {
     return function (callback) {
-        return svn.update(rootDir + "/" + dep.installDir,
-            Object.assign({revision: dep.rev}, svnOptions),
-            function (error, result) {
-            //console.log("UP", result);
-            return callback(error ? result : null)
-        })
+        if (dep.installDirExists && !dep.skipUpdate) {
+            console.log(colors.green("Updating"), colors.yellow(dep.name), "rev=" + dep.rev, "from", dep.COPath);
+            return svn.update(rootDir + "/" + dep.installDir,
+                Object.assign({revision: dep.rev}, svnOptions),
+                function (error, result) {
+                //console.log("UP", result);
+                return callback(error ? result : null)
+            });
+        }
     }
 }
 
 function cleanup(dep) {
     return function (callback) {
-        return svn.cleanup(rootDir + "/" + dep.installDir, svnOptions, function (error, result) {
+        if (dep.installDirExists) return svn.cleanup(rootDir + "/" + dep.installDir, svnOptions, function (error, result) {
             //console.log("Cleanup", result);
             return callback(error ? result : null)
         })
@@ -195,7 +201,7 @@ function npmInstall(dep) {
             }
         }
 
-        cp.exec("npm install --production", {
+        if (dep.installDirExists) cp.exec("npm install --production", {
             stdio: "inherit",
             cwd: rootDir + "/" + dep.installDir,
             env: env
