@@ -201,13 +201,14 @@ function npmInstall(dep) {
             }
         }
 
-        if (dep.installDirExists) cp.exec("npm install --production", {
-            stdio: "inherit",
-            cwd: rootDir + "/" + dep.installDir,
-            env: env
-        }, function (error) {
+        if (dep.installDirExists) {
+            var error = cp.execSync("npm install --production", {
+                stdio: "inherit",
+                cwd: rootDir + "/" + dep.installDir,
+                env: env
+            });
             callback(error ? "npm install failed" : null);
-        });
+        }
     };
 }
 
